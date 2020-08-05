@@ -58,8 +58,8 @@ data "template_file" "user_data" {
 
     vars = {
     server_port = var.server_port
-    db_address  = data.terraform_remote_state.db.outputs.address
-    db_port     = data.terraform_remote_state.db.outputs.port
+    #db_address  = data.terraform_remote_state.db.outputs.address
+    #db_port     = data.terraform_remote_state.db.outputs.port
     }
 }
 
@@ -86,6 +86,16 @@ resource "aws_autoscaling_group" "example" {
     key                 = "Name"
     value               = var.cluster_name
     propagate_at_launch = true
+  }
+
+  dynamic "tag" {
+    for_each = var.custom_tags
+
+    content {
+      key = tag.key
+      value = tag.value
+      propagate_at_launch = true
+    }
   }
 }
 resource "aws_lb" "example" {
@@ -139,16 +149,16 @@ resource "aws_lb_target_group" "asg" {
   }
 }
 
-data "terraform_remote_state" "db" {
-  backend = "s3"
+# data "terraform_remote_state" "db" {
+#   backend = "s3"
 
-  config = {
-    bucket = var.db_remote_state_bucket
-    key    = var.db_remote_state_key
-    region = "us-east-1"
-  }
+#   config = {
+#     bucket = var.db_remote_state_bucket
+#     key    = var.db_remote_state_key
+#     region = "us-east-1"
+#   }
 
-}
+# }
 
 
 
