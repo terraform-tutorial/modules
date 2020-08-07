@@ -49,6 +49,18 @@ variable "custom_tags" {
   default     = {}
 }
 
+variable "enable_autoscaling" {
+  description = "if set to true, enable autoscaling"
+  type        = bool
+}
+variable "give_neo_cloudwatch_full_access"{
+  description = "If True, neo gets full access to cloudwatch"
+  type        = bool
+}
+variable "enable_new_user_data" {
+  description = "If set to true, use the new User Data Script"
+  type        = bool
+}
 
   
 
