@@ -1,3 +1,13 @@
+variable "ami" {
+  description = "The AMI to run in the cluster"
+  type        = string
+  default     = "ami-0ac80df6eff0e70b5"
+}
+variable "server_text" {
+  description = "The text the webserver should return"
+  type        = string
+  default     = "Hello, World!"
+}
 variable "server_port" {
   description = "The port the server will use for http requests"
   type        = number
@@ -57,10 +67,10 @@ variable "give_neo_cloudwatch_full_access"{
   description = "If True, neo gets full access to cloudwatch"
   type        = bool
 }
-variable "enable_new_user_data" {
-  description = "If set to true, use the new User Data Script"
-  type        = bool
-}
+# variable "enable_new_user_data" {
+#   description = "If set to true, use the new User Data Script"
+#   type        = bool
+# }
 
   
 
