@@ -4,6 +4,15 @@ data "aws_vpc" "default"{
 data "aws_subnet_ids" "default" {
   vpc_id = data.aws_vpc.default.id
 }
+data "terraform_remote_state" "db" {
+  backend = "s3"
+
+  config = {
+    bucket = var.db_remote_state_bucket
+    key    = var.db_remote_state_key
+    region = "us-east-1"
+  }
+}
 data "aws_iam_policy_document" "cloudwatch_read_only" {
   statement {
     effect = "Allow"
@@ -200,7 +209,7 @@ resource "aws_autoscaling_schedule" "scale_out_during_business_hours" {
   max_size = 10
   desired_capacity = 10
   recurrence = "0 9 * * *"
-  autoscaling_group_name = module.webserver_cluster.asg_name
+  autoscaling_group_name = module.webserver-cluster.asg_name
 }
 resource "aws_autoscaling_schedule" "scale_in-at-night" {
   count = var.enable_autoscaling ? 1 : 0
@@ -209,7 +218,7 @@ resource "aws_autoscaling_schedule" "scale_in-at-night" {
   max_size = 10
   desired_capacity = 2
   recurrence = "0 17 * * *"
-  autoscaling_group_name = module.webserver_cluster.asg_name
+  autoscaling_group_name = module.webserver-cluster.asg_name
 }
 
 resource "aws_cloudwatch_metric_alarm" "high_cpu_utilization" {
@@ -268,17 +277,13 @@ resource "aws_iam_user_policy_attachment" "neo_cloudwatch_read_only" {
   user = aws_iam_user.example[0].name
   policy_arn = aws_iam_policy.cloudwatch_read_only.arn  
 }
+resource "aws_iam_user" "example" {
+  for_each = toset(var.user_names)
+  name     = each.value
+}
 
-# data "terraform_remote_state" "db" {
-#   backend = "s3"
 
-#   config = {
-#     bucket = var.db_remote_state_bucket
-#     key    = var.db_remote_state_key
-#     region = "us-east-1"
-#   }
 
-# }
 
 
 

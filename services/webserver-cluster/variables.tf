@@ -67,6 +67,11 @@ variable "give_neo_cloudwatch_full_access"{
   description = "If True, neo gets full access to cloudwatch"
   type        = bool
 }
+variable "user_names" {
+  description = "Create IAM users with these names"
+  type        = list(string)
+  default     = ["neo", "trinity", "morpheus"]
+}
 # variable "enable_new_user_data" {
 #   description = "If set to true, use the new User Data Script"
 #   type        = bool
