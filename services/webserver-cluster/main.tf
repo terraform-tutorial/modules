@@ -133,6 +133,7 @@ resource "aws_autoscaling_group" "example" {
       for key, value in var.custom_tags:
       key => upper(value)
       if key != "Name"
+    }
 
     content {
       key = tag.key
